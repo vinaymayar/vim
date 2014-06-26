@@ -1,0 +1,216 @@
+syntax enable
+set nocompatible
+set tabstop=4
+set shiftwidth=4
+set nu
+set smarttab autoindent
+set smartcase
+set smartindent
+set expandtab
+set tabpagemax=100
+
+filetype plugin on
+
+" Tags
+set tags=tags;~
+
+" Backspace
+set backspace=indent,eol,start
+
+" Wrap lines
+set whichwrap+=<,>,h,l,[,]
+
+" Mouse, for easy split window adjusting.
+" Note: doesn't work in Terminal.
+set mouse=a
+
+" Don't ask to open these types of files.
+set wildignore+=*.zip,*.swp,*.class,*.pyc,*.o,*.so
+
+" Some useful maps
+" {{{
+noremap ; :
+
+" Copy paste from clipboard
+" set clipboard=unnamed
+vnoremap <C-c> "*y
+" Using <C-b> in cmd mode because <C-v> is taken (and useful)
+noremap <C-b> "*p
+inoremap <C-v> <Esc>"*p`]a
+" Copy whole file
+noremap <C-y> myggvG$"*y`y
+inoremap <C-y> <Esc>myggvG$"*y`ya
+
+" Useful maps 
+" }}}
+
+autocmd BufNewFile,BufReadPost *.ino,*.pde set filetype=cpp
+
+" LaTeX
+" {{{
+set grepprg=grep\ -nH\ $*
+filetype indent on 
+" let g:Tex_CompileRule_pdf = 'pdflatex -interaction=nonstopmode $*'
+let g:tex_flavor='vimlatex'
+let g:Tex_TreatMacViewerAsUNIX = 1
+let g:Tex_ExecuteUNIXViewerInForeground = 1
+let g:Tex_ViewRule_ps = 'open -a Preview'
+let g:Tex_ViewRule_pdf = 'open -a /Applications/Preview.app'
+let g:Tex_ViewRule_dvi = 'open -a /Applications/Preview.app'
+let g:Tex_EnvironmentMaps = 0
+let g:Tex_EnvironmentMenus = 0
+let g:Imap_UsePlaceHolders = 0
+
+" Save, compile, and view.
+autocmd FileType tex map <Leader>c <Esc>:w<Return><Plug>Tex_Compile<Plug>Tex_View
+
+" Auto-close braces and brackets.
+autocmd FileType tex inoremap {      {}<Left>
+autocmd FileType tex inoremap {<CR>  {<CR>}<Esc>O
+autocmd FileType tex inoremap {{     {
+autocmd FileType tex inoremap {}     {}
+autocmd FileType tex inoremap <expr> }  strpart(getline('.'), col('.')-1, 1) == "}" ? "\<Right>" : "}"
+
+autocmd FileType tex inoremap [      []<Left>
+" autocmd FileType tex inoremap [<CR>  [<CR>]<Esc>O
+autocmd FileType tex inoremap [[     [
+autocmd FileType tex inoremap []     []
+autocmd FileType tex inoremap <expr> ]  strpart(getline('.'), col('.')-1, 1) == "]" ? "\<Right>" : "]"
+" LaTeX
+" }}}
+
+" Scala
+" {{{
+" Indents
+autocmd FileType scala set tabstop=2
+autocmd FileType scala set shiftwidth=2
+
+" Sorting imports
+let g:scala_first_party_namespaces='\(controllers\|views\|models\|util\|de.\)'
+autocmd FileType scala map <Leader>s :SortScalaImports<CR>
+" Scala
+" }}}
+
+" CoffeeScript
+" {{{
+autocmd FileType coffee set tabstop=2
+autocmd FileType coffee set shiftwidth=2
+" CoffeeScript
+" }}}
+
+
+" if has("autocmd")
+"     au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
+"         \| exe "normal! g'\"" | endif
+" endif
+
+" Comment this line out if pathogen is not installed
+execute pathogen#infect()
+
+" Solarized color scheme
+set background=dark
+colorscheme solarized
+
+" Open NerdTree if vim starts with no files
+" autocmd vimenter * if !argc() | NERDTree | endif
+
+" NerdTree
+map <C-n> :NERDTreeToggle<CR>
+
+" Control-P
+map <C-p> :CtrlP<CR>
+map <Leader>] :CtrlPTag<CR>
+
+" Multiple Cursors
+" {{{
+let g:multi_cursor_use_default_mapping=0
+let g:multi_cursor_next_key='<C-m>'
+let g:multi_cursor_prev_key='<C-k>'
+let g:multi_cursor_skip_key='<C-x>'
+let g:multi_cursor_quit_key='<Esc>'
+" Multiple Cursors
+" }}}
+
+" Java stuff from Jeff DellaTezza
+" Auto insert closing brace and indent in java
+" autocmd FileType java imap { {<C-O>:call WeirdMap()<Enter>6<C-O>:call ResetMap()<Enter>
+
+" function! WeirdMap()
+" 	if !empty(matchstr(split(getline('.')),")\$"))
+" 		imap 6 <Enter>}<Left><Enter><Up><Tab>
+" 	elseif len(split(getline('.'))) == 1
+" 		imap 6 <Enter>}<Left><Enter><Up><Tab>
+" 	elseif !empty(matchstr(getline('.'), " class "))
+" 		imap 6 <Enter>}<Left><Enter><Up><Tab>
+" 	elseif !empty(matchstr(getline('.'), " interface "))
+" 		imap 6 <Enter>}<Left><Enter><Up><Tab>
+" 	else
+" 		imap 6 <Left><Right>
+" 	endif
+" endfunction
+" 
+" function! ResetMap()
+" 	imap 6 6
+" endfunction
+" 
+" function! JavaDoc() " :call JavaDoc() on a method sig
+" 	let startLine = line('.')
+" 	let indentString = ''
+" 	let spc = ' '
+" 	let i = 0
+" 	let splitLine = split(getline(startLine))
+" 	while i < indent('.')
+" 		let indentString = indentString . spc
+" 		let i += 1
+" 	endwhile
+" 	let i = 1
+" 	let hasRet = 1
+" 	let lines = [indentString . '/**', indentString . ' * ' . 'Description.']
+" 	while i < len(splitLine)
+" 		let stringm = matchstr(splitLine[i], '\zs\w\+\ze[),]')
+" 		if !empty(stringm)
+" 			call add(lines, indentString . ' * @param ' . stringm)
+" 		endif
+" 		let i += 1
+" 	endwhile
+" 	if hasRet
+" 		call add(lines, indentString . ' * @return')
+" 	endif
+" 	call add(lines, indentString . ' */')
+" 	exec append(startLine - 1, lines)
+" 	exec startLine + 1
+" endfunction
+" 
+" 
+" autocmd FileType java imap <silent> <C-D><C-D> <C-O>:call InsertDoc()<Enter>
+" function! InsertDoc() " :call JavaDoc() on a method sig
+" 	let startLine = line('.')
+" 	let indentString = ''
+" 	let spc = ' '
+" 	let i = 0
+" 	let splitLine = split(getline(startLine))
+" 	while i < indent('.')
+" 		let indentString = indentString . spc
+" 		let i += 1
+" 	endwhile
+" 	let i = 1
+" 	let hasRet = 1
+" 	let lines = [indentString . '/**', indentString . ' * ', indentString . ' */']
+" 	exec append(startLine - 1, lines)
+" 	exec startLine + 1
+"     exec 'normal'.99.'|'
+" endfunction
+" 
+" 
+" function! MyFoldLevel( lineNumber )
+"     let thisLine = getline( a:lineNumber )
+"     if ( thisLine =~ '\%(^\s*/\*\*\s*$\)\|{' )
+"         return "a1"
+"     elseif ( thisLine =~ '\%(^\s*\*/\s*$\)\|}' )
+"         return "s1"
+"     endif
+"     return '='
+" endfunction
+" 
+" autocmd FileType java setlocal foldexpr=MyFoldLevel(v:lnum)
+" autocmd FileType java setlocal foldmethod=expr
