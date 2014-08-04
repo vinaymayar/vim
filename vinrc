@@ -97,6 +97,14 @@ autocmd FileType coffee set tabstop=2
 autocmd FileType coffee set shiftwidth=2
 " CoffeeScript
 " }}}
+"
+" Ruby
+" {{{
+" Indents
+autocmd FileType ruby set tabstop=2
+autocmd FileType ruby set shiftwidth=2
+" }}}
+
 
 
 " if has("autocmd")
