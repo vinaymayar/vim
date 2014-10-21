@@ -105,7 +105,20 @@ autocmd FileType ruby set tabstop=2
 autocmd FileType ruby set shiftwidth=2
 " }}}
 
+" HTML
+" {{{
+" Indents
+au BufNewFile,BufRead *.ejs set filetype=html
+autocmd FileType html set tabstop=2
+autocmd FileType html set shiftwidth=2
+" }}}
 
+" JavaScript
+" {{{
+" Indents
+autocmd FileType javascript set tabstop=2
+autocmd FileType javascript set shiftwidth=2
+" }}}
 
 " if has("autocmd")
 "     au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
