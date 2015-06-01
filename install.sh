@@ -33,13 +33,13 @@ cp -rf ./vinrc $vimrc
 githubdirs=("nerdtree" "ctrlp.vim" "vim-easymotion" "vim-multiple-cursors"\
     "vim-colors-solarized" "vim-fugitive" "vim-scala" "vim-coffee-script" "ack.vim"\
     "vim-go" "html5" "play2vim" "vim-less" "vim-css3-syntax" "vim-rails"\
-    "vim-javascript")
+    "vim-javascript" "syntastic")
 repos=("scrooloose/nerdtree.git" "kien/ctrlp.vim" "Lokaltog/vim-easymotion"\
     "terryma/vim-multiple-cursors.git" "altercation/vim-colors-solarized.git"\
     "tpope/vim-fugitive" "derekwyatt/vim-scala.git" "kchmck/vim-coffee-script"\
     "mileszs/ack.vim" "fatih/vim-go.git" "othree/html5.vim" "gre/play2vim.git"\
     "groenewege/vim-less" "hail2u/vim-css3-syntax" "tpope/vim-rails.git"\
-    "pangloss/vim-javascript")
+    "pangloss/vim-javascript" "scrooloose/syntastic")
 
 for idx in ${!githubdirs[*]}
 do
