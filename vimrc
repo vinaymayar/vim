@@ -1,3 +1,34 @@
+set nocompatible
+filetype off
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+Plugin 'VundleVim/Vundle.vim'
+
+Plugin 'scrooloose/nerdtree'
+Plugin 'kien/ctrlp.vim'
+Plugin 'Lokaltog/vim-easymotion'
+Plugin 'terryma/vim-multiple-cursors'
+Plugin 'altercation/vim-colors-solarized'
+Plugin 'tpope/vim-fugitive'
+Plugin 'derekwyatt/vim-scala'
+Plugin 'kchmck/vim-coffee-script'
+Plugin 'mileszs/ack.vim'
+Plugin 'fatih/vim-go'
+Plugin 'othree/html5.vim'
+Plugin 'gre/play2vim'
+Plugin 'groenewege/vim-less'
+Plugin 'hail2u/vim-css3-syntax'
+Plugin 'tpope/vim-rails'
+Plugin 'pangloss/vim-javascript'
+Plugin 'scrooloose/syntastic'
+Plugin 'neovimhaskell/haskell-vim'
+Plugin 'panagosg7/vim-annotations'
+Plugin 'phleet/vim-mercenary'
+
+call vundle#end()
+filetype plugin indent on
+
 syntax enable
 set nocompatible
 set tabstop=4
@@ -8,8 +39,6 @@ set smartcase
 set smartindent
 set expandtab
 set tabpagemax=100
-
-filetype plugin on
 
 " Tags
 set tags=tags;~
@@ -50,7 +79,8 @@ autocmd BufNewFile,BufReadPost *.ino,*.pde set filetype=cpp
 " {{{
 set grepprg=grep\ -nH\ $*
 filetype indent on 
-" let g:Tex_CompileRule_pdf = 'pdflatex -interaction=nonstopmode $*'
+let g:Tex_CompileRule_pdf = 'pdflatex -interaction=nonstopmode $*'
+let g:Tex_DefaultTargetFormat = 'pdf'
 let g:tex_flavor='vimlatex'
 let g:Tex_TreatMacViewerAsUNIX = 1
 let g:Tex_ExecuteUNIXViewerInForeground = 1
@@ -91,13 +121,21 @@ autocmd FileType scala map <Leader>s :SortScalaImports<CR>
 " Scala
 " }}}
 
+" Haskell
+" {{{
+au BufNewFile,BufRead *.sq set filetype=haskell
+let g:vim_annotations_offset = '/.liquid/'
+autocmd FileType haskell set tabstop=2
+autocmd FileType haskell set shiftwidth=2
+" }}}
+
 " CoffeeScript
 " {{{
 autocmd FileType coffee set tabstop=2
 autocmd FileType coffee set shiftwidth=2
 " CoffeeScript
 " }}}
-"
+
 " Ruby
 " {{{
 " Indents
@@ -125,8 +163,8 @@ autocmd FileType javascript set shiftwidth=2
 "         \| exe "normal! g'\"" | endif
 " endif
 
-" Comment this line out if pathogen is not installed
-execute pathogen#infect()
+" Now using Vundle, so this should stay commented.
+" execute pathogen#infect()
 
 " Solarized color scheme
 set background=dark
@@ -151,87 +189,3 @@ let g:multi_cursor_skip_key='<C-x>'
 let g:multi_cursor_quit_key='<Esc>'
 " Multiple Cursors
 " }}}
-
-" Java stuff from Jeff DellaTezza
-" Auto insert closing brace and indent in java
-" autocmd FileType java imap { {<C-O>:call WeirdMap()<Enter>6<C-O>:call ResetMap()<Enter>
-
-" function! WeirdMap()
-" 	if !empty(matchstr(split(getline('.')),")\$"))
-" 		imap 6 <Enter>}<Left><Enter><Up><Tab>
-" 	elseif len(split(getline('.'))) == 1
-" 		imap 6 <Enter>}<Left><Enter><Up><Tab>
-" 	elseif !empty(matchstr(getline('.'), " class "))
-" 		imap 6 <Enter>}<Left><Enter><Up><Tab>
-" 	elseif !empty(matchstr(getline('.'), " interface "))
-" 		imap 6 <Enter>}<Left><Enter><Up><Tab>
-" 	else
-" 		imap 6 <Left><Right>
-" 	endif
-" endfunction
-" 
-" function! ResetMap()
-" 	imap 6 6
-" endfunction
-" 
-" function! JavaDoc() " :call JavaDoc() on a method sig
-" 	let startLine = line('.')
-" 	let indentString = ''
-" 	let spc = ' '
-" 	let i = 0
-" 	let splitLine = split(getline(startLine))
-" 	while i < indent('.')
-" 		let indentString = indentString . spc
-" 		let i += 1
-" 	endwhile
-" 	let i = 1
-" 	let hasRet = 1
-" 	let lines = [indentString . '/**', indentString . ' * ' . 'Description.']
-" 	while i < len(splitLine)
-" 		let stringm = matchstr(splitLine[i], '\zs\w\+\ze[),]')
-" 		if !empty(stringm)
-" 			call add(lines, indentString . ' * @param ' . stringm)
-" 		endif
-" 		let i += 1
-" 	endwhile
-" 	if hasRet
-" 		call add(lines, indentString . ' * @return')
-" 	endif
-" 	call add(lines, indentString . ' */')
-" 	exec append(startLine - 1, lines)
-" 	exec startLine + 1
-" endfunction
-" 
-" 
-" autocmd FileType java imap <silent> <C-D><C-D> <C-O>:call InsertDoc()<Enter>
-" function! InsertDoc() " :call JavaDoc() on a method sig
-" 	let startLine = line('.')
-" 	let indentString = ''
-" 	let spc = ' '
-" 	let i = 0
-" 	let splitLine = split(getline(startLine))
-" 	while i < indent('.')
-" 		let indentString = indentString . spc
-" 		let i += 1
-" 	endwhile
-" 	let i = 1
-" 	let hasRet = 1
-" 	let lines = [indentString . '/**', indentString . ' * ', indentString . ' */']
-" 	exec append(startLine - 1, lines)
-" 	exec startLine + 1
-"     exec 'normal'.99.'|'
-" endfunction
-" 
-" 
-" function! MyFoldLevel( lineNumber )
-"     let thisLine = getline( a:lineNumber )
-"     if ( thisLine =~ '\%(^\s*/\*\*\s*$\)\|{' )
-"         return "a1"
-"     elseif ( thisLine =~ '\%(^\s*\*/\s*$\)\|}' )
-"         return "s1"
-"     endif
-"     return '='
-" endfunction
-" 
-" autocmd FileType java setlocal foldexpr=MyFoldLevel(v:lnum)
-" autocmd FileType java setlocal foldmethod=expr
